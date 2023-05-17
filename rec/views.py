@@ -17,7 +17,7 @@ def process(file):
      images.append(curimg)
      classnames.append(os.path.splitext(cl)[0])
     
-    print(classnames)  
+    #print(classnames)  
     #print(images)  
 
     def encode(img):
@@ -28,7 +28,7 @@ def process(file):
         encli.append(enc)
      return encli
     encknown=encode(images)    
-    print(len(encknown))
+    #print(len(encknown))
 
    
 
@@ -36,37 +36,44 @@ def process(file):
 
     success,imgS=cap.read()
 
-    # imgS = cv2.resize(img, (0, 0), None, 0.25, 0.5)
-    # imgS=cv2.cvtColor(imgS,cv2.COLOR_BGR2RGB)
+    #imgS = cv2.resize(imgS, (0, 0), None, 0.25, 0.5)
+    #imgS=cv2.cvtColor(imgS,cv2.COLOR_BGR2RGB)
     # print(imgS)
 
     facescurframe=face_recognition.face_locations(imgS)
-    #print(facescurframe)
+#print(facescurframe)
     enccurframe=face_recognition.face_encodings(imgS,facescurframe)
-    #print(len(encknown))
+#print(len(encknown))
 
     for enco,face in zip(enccurframe,facescurframe):
-        #print(len(encknown))
-        if len(encknown) > 0:  # check if encknown is not empty
-            matches=face_recognition.compare_faces(encknown,enco)
-            facedis=face_recognition.face_distance(encknown,enco)
-            print(facedis)
-            matchindex=np.argmin(facedis)
-            print(matchindex)
+    #print(len(encknown))
+     if len(encknown) > 0:  # check if encknown is not empty
+        matches=face_recognition.compare_faces(encknown,enco)
+        facedis=face_recognition.face_distance(encknown,enco)
+        print(facedis)
+        matchindex=np.argmin(facedis)
+        print(matchindex)
 
-            if matches[matchindex]:
-                name=classnames[matchindex].upper()
-                print(name,'matched')
-                cv2.putText(imgS,f'{name} matched',(20,170),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,255),2)
+        if matches[matchindex]:
+            name=classnames[matchindex].upper()
+            print(name,'matched')
+            cv2.putText(imgS,f'{name} matched',(20,170),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,255),2)
 
-            else:
-                print('encknown is empty')
-                cv2.putText(imgS,f'Not matched',(20,170),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,255),2)
+        else:
+            print('not matched')
+            cv2.putText(imgS,f'Not matched',(20,170),cv2.FONT_HERSHEY_COMPLEX,0.7,(0,0,255),2)
+
+            
+    else:
+        print('encknown is empty')
                 
     # display the frame
-    imgS=cv2.resize(imgS,(640,480))
+    
+    
+    #imgS=cv2.resize(imgS,(640,480))
     cv2.imshow('Frame', imgS)
-    cv2.waitKey(20000)
+    cv2.waitKey(10000)
+    cv2.destroyAllWindows()
     
    
 
